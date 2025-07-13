@@ -53,7 +53,6 @@ export default function FormModal() {
 
   const handleSubmit = () => {
     console.log(JSON.stringify(formData, null, 2));
-    alert("콘솔에서 JSON을 확인하세요!");
   };
 
   const rankOptionsMap: Record<string, { label: string; value: string }[]> = {
@@ -77,48 +76,60 @@ export default function FormModal() {
         <DialogTrigger asChild>
           <Button variant="outline">Open Dialog</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[1000px]">
-          <DialogHeader>
+        <DialogContent className="sm:max-w-[800px]">
+          <DialogHeader className="px-6 pt-4">
             <DialogTitle>인적 정보 입력</DialogTitle>
             <DialogDescription>
               정보를 수정하세요. 저장을 누르면 반영됩니다.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex flex-col gap-6 p-6">
-            {/* ✅ 이름 / 전화번호 */}
-            <div className="grid gap-4">
-              <div className="grid gap-3">
-                <Label htmlFor="name">이름</Label>
-                <Input
-                  id="name"
-                  placeholder="이름을 입력하세요"
-                  value={formData.name}
-                  onChange={(e) => handleChange("name")(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-3">
-                <Label htmlFor="phone">전화번호</Label>
-                <Input
-                  id="phone"
-                  placeholder="전화번호를 입력하세요"
-                  value={formData.phone}
-                  onChange={(e) => handleChange("phone")(e.target.value)}
-                />
-              </div>
+          <div className="grid sm:grid-cols-4 gap-6 px-6 py-4">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="name">이름</Label>
+              <Input
+                id="name"
+                placeholder="이름을 입력하세요"
+                value={formData.name}
+                onChange={(e) => handleChange("name")(e.target.value)}
+              />
             </div>
 
-            {/* ✅ 공통 Select 컴포넌트 */}
-            <CustomSelect
-              label="좋아하는 색"
-              value={formData.color}
-              onChange={handleChange("color")}
-              options={[
-                { label: "빨강", value: "빨강" },
-                { label: "파랑", value: "파랑" },
-                { label: "초록", value: "초록" },
-              ]}
-            />
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="name">이름</Label>
+              <Input
+                id="name"
+                placeholder="이름을 입력하세요"
+                value={formData.name}
+                onChange={(e) => handleChange("name")(e.target.value)}
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="phone">전화번호</Label>
+              <Input
+                id="phone"
+                placeholder="전화번호를 입력하세요"
+                value={formData.phone}
+                onChange={(e) => handleChange("phone")(e.target.value)}
+              />
+            </div>
+
+            <div className="col-start-1">
+              {/* 좋아하는 색 */}
+              <CustomSelect
+                label="좋아하는 색"
+                value={formData.color}
+                onChange={handleChange("color")}
+                options={[
+                  { label: "빨강", value: "빨강" },
+                  { label: "파랑", value: "파랑" },
+                  { label: "초록", value: "초록" },
+                ]}
+              />
+            </div>
+
+            {/* 구분 */}
             <CustomSelect
               label="구분"
               value={formData.gubun}
@@ -128,22 +139,26 @@ export default function FormModal() {
                 { label: "공무원", value: "gongmuwon" },
               ]}
             />
+
+            {/* 계급 */}
             <CustomSelect
               label="계급"
               value={formData.rank}
               onChange={handleChange("rank")}
               options={rankOptions}
               placeholder="구분 먼저 선택"
-              disabled={!formData.gubun} // 구분이 선택되지 않았으면 비활성화
+              disabled={!formData.gubun}
             />
-            <div className="flex flex-col gap-2">
+
+            {/* 소속 부대 */}
+            <div className="flex flex-col gap-2 col-span-2">
               <Label>소속 부대</Label>
-              <div className="flex gap-1">
+              <div className="flex gap-2 items-center">
                 <Input
                   disabled
                   value={formData.sosok}
                   readOnly
-                  className="w-[200px]"
+                  className="w-[300px]"
                   placeholder="부대 검색 클릭"
                 />
                 <SearchSosokModal onSelect={handleSosokSelect} />
@@ -155,9 +170,11 @@ export default function FormModal() {
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit" onClick={handleSubmit}>
-              Save changes
-            </Button>
+            <DialogClose asChild>
+              <Button type="submit" onClick={handleSubmit}>
+                Save changes
+              </Button>
+            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </form>

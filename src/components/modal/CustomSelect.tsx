@@ -33,7 +33,7 @@ export default function CustomSelect({
     <div className="flex flex-col gap-2">
       <Label>{label}</Label>
       <Select value={value} onValueChange={onChange} disabled={disabled}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-auto">
           <SelectValue placeholder={placeholder || "선택하세요"} />
         </SelectTrigger>
         <SelectContent>
