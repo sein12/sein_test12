@@ -23,7 +23,12 @@ export default function FormModal() {
     color: "",
     gubun: "",
     rank: "",
+    sosok: "",
   });
+
+  const handleSosokSelect = (value: string) => {
+    setFormData((prev) => ({ ...prev, sosok: value }));
+  };
 
   const handleChange = (key: keyof typeof formData) => (value: string) => {
     setFormData((prev) => ({
@@ -74,7 +79,7 @@ export default function FormModal() {
         </DialogTrigger>
         <DialogContent className="sm:max-w-[1000px]">
           <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
+            <DialogTitle>인적 정보 입력</DialogTitle>
             <DialogDescription>
               정보를 수정하세요. 저장을 누르면 반영됩니다.
             </DialogDescription>
@@ -128,10 +133,22 @@ export default function FormModal() {
               value={formData.rank}
               onChange={handleChange("rank")}
               options={rankOptions}
-              placeholder="계급 선택"
+              placeholder="구분 먼저 선택"
               disabled={!formData.gubun} // 구분이 선택되지 않았으면 비활성화
             />
-            <SearchSosokModal />
+            <div className="flex flex-col gap-2">
+              <Label>소속 부대</Label>
+              <div className="flex gap-1">
+                <Input
+                  disabled
+                  value={formData.sosok}
+                  readOnly
+                  className="w-[200px]"
+                  placeholder="부대 검색 클릭"
+                />
+                <SearchSosokModal onSelect={handleSosokSelect} />
+              </div>
+            </div>
           </div>
 
           <DialogFooter>

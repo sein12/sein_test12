@@ -14,7 +14,11 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area"; // ✅ 리스트에 스크롤 적용
 
-export default function SearchSosokModal() {
+type SearchSosokModalProps = {
+  onSelect: (value: string) => void;
+};
+
+export default function SearchSosokModal({ onSelect }: SearchSosokModalProps) {
   const [search, setSearch] = useState("");
 
   // ✅ 임시 리스트 데이터 (나중에 백엔드 연동 가능)
@@ -36,9 +40,9 @@ export default function SearchSosokModal() {
     <Dialog>
       <form>
         <DialogTrigger asChild>
-          <Button variant="outline">Open Dialog</Button>
+          <Button variant="outline">부대 검색</Button>
         </DialogTrigger>
-        <DialogContent className="flex flex-col gap-7 sm:max-w-[700px]">
+        <DialogContent className="flex flex-col gap-5 sm:max-w-[700px]">
           <DialogHeader>
             <DialogTitle>소속 부대 검색</DialogTitle>
             <DialogDescription>
@@ -58,37 +62,26 @@ export default function SearchSosokModal() {
             />
           </div>
 
-          <ScrollArea className="h-[200px] border rounded-md p-2">
+          <ScrollArea className="h-[300px] border rounded-md p-2">
             <div className="flex flex-col gap-2">
               {filteredList.length > 0 ? (
-                filteredList.map((item, index) => (
-                  <>
+                filteredList.map((item) => (
+                  <DialogClose asChild key={item}>
                     <Button
-                      key={index}
                       variant="ghost"
                       className="justify-start"
                       type="button"
-                      onClick={() => {
-                        alert(`"${item}" 선택됨`); // 나중에 선택값 전달하면 됨
-                      }}
+                      onClick={() => onSelect(item)}
                     >
                       {item}
                     </Button>
-                    <hr></hr>
-                  </>
+                  </DialogClose>
                 ))
               ) : (
                 <p className="text-sm text-muted-foreground">결과 없음</p>
               )}
             </div>
           </ScrollArea>
-
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button type="submit">Save changes</Button>
-          </DialogFooter>
         </DialogContent>
       </form>
     </Dialog>

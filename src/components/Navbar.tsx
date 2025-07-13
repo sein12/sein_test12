@@ -1,43 +1,46 @@
 import {
   NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuViewport,
-} from "@/components/ui/navigation-menu"
-import {Link} from "react-router-dom";
+  NavigationMenuLink,
+} from "@/components/ui/navigation-menu";
 
 export default function Navbar() {
   return (
-    <NavigationMenu viewport={false}>
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Home</NavigationMenuTrigger>
-        </NavigationMenuItem>
+    <nav className="flex items-center justify-between px-6 py-4 border-b bg-white">
+      <div className="flex items-center gap-6">
+        <div className="text-xl font-bold">MyApp</div>
+        <NavigationMenu>
+          <NavigationMenuList className="gap-4">
+            <NavigationMenuItem>
+              <NavigationMenuLink href="/" className="text-sm font-medium">
+                A Page
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink
+                href="/profile"
+                className="text-sm font-medium"
+              >
+                B Page
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+      </div>
 
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Components</NavigationMenuTrigger>
-        </NavigationMenuItem>
-        
-        <NavigationMenuItem>
-            <Link to="/docs">Docs</Link>
-        </NavigationMenuItem>
-
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>List</NavigationMenuTrigger>
-        </NavigationMenuItem>
-
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Simple</NavigationMenuTrigger>
-        </NavigationMenuItem>
-
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>With Icon</NavigationMenuTrigger>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
-  )
+      <NavigationMenu>
+        <NavigationMenuList className="gap-4">
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              href="/logout"
+              className="text-sm font-medium text-red-600"
+            >
+              로그아웃
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+    </nav>
+  );
 }
