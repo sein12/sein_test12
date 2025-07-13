@@ -1,34 +1,32 @@
-// app/App.tsx or app/page.tsx
-"use client"
-import { useState } from "react"
-import { columns } from "./Column"
-import { DataTable } from "@/components/table/DataTable"
-import Filters from "@/components/table/Filters"
-import type { Payment } from "../components/table/types"
-
-const mockData: Payment[] = [
-  { id: "1", email: "test@example.com", amount: 100, status: "pending" },
-  { id: "2", email: "abc@example.com", amount: 150, status: "success" },
-  { id: "3", email: "xyz@example.com", amount: 200, status: "processing" },
-]
+import { useState } from "react";
+import { columns } from "@/components/table/columns";
+import { DataTable } from "@/components/table/DataTable";
+import Filters from "@/components/table/Filters";
+import { mockData } from "./mockData";
+import type { ColumnFiltersState } from "@tanstack/react-table";
+import FormModal from "../components/modal/FormModal";
 
 export default function Page() {
-  const [emailFilter, setEmailFilter] = useState("")
-  const [statusFilter, setStatusFilter] = useState("")
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   return (
-    <div className="container py-10">
-      <Filters
-        email={emailFilter}
-        setEmail={setEmailFilter}
-        status={statusFilter}
-        setStatus={setStatusFilter}
-      />
-      <DataTable
-        columns={columns}
-        data={mockData}
-        filters={{ email: emailFilter, status: statusFilter }}
-      />
+    <div className="flex flex-col items-center min-h-screen bg-gray-50">
+      <div className="w-full max-w-4xl px-4 pt-20">
+        <div className="flex flex-row items-center justify-between my-4">
+          <Filters
+            columnFilters={columnFilters}
+            onColumnFiltersChange={setColumnFilters}
+          />
+          <FormModal />
+        </div>
+
+        <DataTable
+          columns={columns}
+          data={mockData}
+          columnFilters={columnFilters}
+          onColumnFiltersChange={setColumnFilters}
+        />
+      </div>
     </div>
-  )
+  );
 }

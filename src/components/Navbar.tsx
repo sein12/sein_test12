@@ -10,7 +10,7 @@ export default function Navbar() {
   const location = useLocation();
 
   return (
-    <nav className="flex items-center justify-between px-6 py-4 border-b bg-white">
+    <nav className="flex items-center justify-between px-8 p-4 border-b bg-white">
       <div className="flex items-center gap-6">
         <div className="text-xl font-bold">MyApp</div>
         <NavigationMenu>
@@ -52,9 +52,9 @@ export default function Navbar() {
           <NavigationMenuItem>
             <NavigationMenuLink
               href="/logout"
-              className="text-sm font-medium text-red-600"
+              className="text-sm font-semibold text-red-400"
             >
-              로그아웃
+              관리자
             </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>

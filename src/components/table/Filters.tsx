@@ -1,29 +1,54 @@
 // components/Filters.tsx
-"use client"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import type { Dispatch, SetStateAction } from "react"
+"use client";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import type { ColumnFiltersState, ColumnFilter } from "@tanstack/react-table";
 
 interface FiltersProps {
-  email: string
-  setEmail: Dispatch<SetStateAction<string>>
-  status: string
-  setStatus: Dispatch<SetStateAction<string>>
+  columnFilters: ColumnFiltersState;
+  onColumnFiltersChange: (filters: ColumnFiltersState) => void;
 }
 
-export default function Filters({ email, setEmail, status, setStatus }: FiltersProps) {
+export default function Filters({
+  columnFilters,
+  onColumnFiltersChange,
+}: FiltersProps) {
+  const emailFilter =
+    (columnFilters.find((f) => f.id === "email")?.value as string) || "";
+  const statusFilter =
+    (columnFilters.find((f) => f.id === "status")?.value as string) || "all";
+  const minAmtVal =
+    (columnFilters.find((f) => f.id === "amount")?.value as string) || "";
+
+  const updateFilter = (id: string, value: string) => {
+    const next = columnFilters.filter((f) => f.id !== id);
+    if (value && !(id === "status" && value === "all")) {
+      next.push({ id, value });
+    }
+    onColumnFiltersChange(next);
+  };
+
   return (
-    <div className="flex flex-wrap gap-4 mb-4">
+    <div className="flex flex-row items-center gap-4">
       {/* 이메일 검색 */}
       <Input
         placeholder="Search Email..."
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        value={emailFilter}
+        onChange={(e) => updateFilter("email", e.target.value)}
         className="max-w-sm"
       />
 
       {/* 상태 필터 */}
-      <Select value={status} onValueChange={setStatus}>
+      <Select
+        value={statusFilter}
+        onValueChange={(val) => updateFilter("status", val)}
+      >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Filter by Status" />
         </SelectTrigger>
@@ -35,6 +60,14 @@ export default function Filters({ email, setEmail, status, setStatus }: FiltersP
           <SelectItem value="failed">Failed</SelectItem>
         </SelectContent>
       </Select>
+
+      <Input
+        type="number"
+        placeholder="Min Amount"
+        value={minAmtVal}
+        onChange={(e) => updateFilter("amount", e.target.value)}
+        className="w-32"
+      />
     </div>
-  )
+  );
 }

@@ -1,81 +1,51 @@
-"use client"
-import * as React from "react"
+import { useMemo } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { flexRender } from "@tanstack/react-table"
-import type {
-  ColumnDef,
-  ColumnFiltersState,
-} from "@tanstack/react-table"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import type { Payment } from "./types"
+} from "@tanstack/react-table";
+import { flexRender } from "@tanstack/react-table";
+import type { ColumnDef, ColumnFiltersState } from "@tanstack/react-table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
-  filters: {
-    email: string
-    status: string
-  }
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  columnFilters: ColumnFiltersState;
+  onColumnFiltersChange: Dispatch<SetStateAction<ColumnFiltersState>>;
 }
 
-
-export function DataTable<TData, TValue>({ columns, data, filters }: DataTableProps<TData, TValue>) {
-  const [statusFilter, setStatusFilter] = React.useState("")
-  const [emailFilter, setEmailFilter] = React.useState("")
+export function DataTable<TData, TValue>({
+  columns,
+  data,
+  columnFilters,
+  onColumnFiltersChange,
+}: DataTableProps<TData, TValue>) {
+  const memoColumns = useMemo(() => columns, [columns]);
+  const memoData = useMemo(() => data, [data]);
 
   const table = useReactTable({
-    data,
-    columns,
+    data: memoData,
+    columns: memoColumns,
+    state: { columnFilters },
+    onColumnFiltersChange,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    state: {
-      columnFilters: [
-        { id: "email", value: filters.email },
-    ...(filters.status === "all" ? [] : [{ id: "status", value: filters.status }]),
-      ],
-    },
-  })
-
-
-  // ✅ 필터 처리
-  React.useEffect(() => {
-    table.getColumn("email")?.setFilterValue(emailFilter)
-    table.getColumn("status")?.setFilterValue(statusFilter)
-  }, [emailFilter, statusFilter])
+  });
 
   return (
     <div>
-      {/* 검색 필터 */}
-      <div className="flex gap-4 mb-4">
-        <Input
-          placeholder="Search Email..."
-          value={emailFilter}
-          onChange={(e) => setEmailFilter(e.target.value)}
-          className="max-w-sm"
-        />
-
-        <select
-          className="border p-2 rounded-md"
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-        >
-          <option value="">All Status</option>
-          <option value="pending">Pending</option>
-          <option value="processing">Processing</option>
-          <option value="success">Success</option>
-          <option value="failed">Failed</option>
-        </select>
-      </div>
-
-      {/* 테이블 */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -83,7 +53,11 @@ export function DataTable<TData, TValue>({ columns, data, filters }: DataTablePr
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
-                    {header.isPlaceholder ? null : header.column.columnDef.header as string}
+                    {!header.isPlaceholder &&
+                      flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -95,13 +69,17 @@ export function DataTable<TData, TValue>({ columns, data, filters }: DataTablePr
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>                  ))}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="text-center">
+                <TableCell colSpan={memoColumns.length} className="text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -128,5 +106,5 @@ export function DataTable<TData, TValue>({ columns, data, filters }: DataTablePr
         </Button>
       </div>
     </div>
-  )
+  );
 }
