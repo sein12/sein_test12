@@ -1,5 +1,3 @@
-// components/Filters.tsx
-"use client";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -8,46 +6,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { ColumnFiltersState, ColumnFilter } from "@tanstack/react-table";
 
 interface FiltersProps {
-  columnFilters: ColumnFiltersState;
-  onColumnFiltersChange: (filters: ColumnFiltersState) => void;
+  filters: {
+    email: string;
+    status: string;
+    minAmount: string;
+  };
+  onFiltersChange: (name: keyof FiltersProps["filters"], value: string) => void;
 }
 
 export default function Filters({
-  columnFilters,
-  onColumnFiltersChange,
+  filters,
+  onFiltersChange,
 }: FiltersProps) {
-  const emailFilter =
-    (columnFilters.find((f) => f.id === "email")?.value as string) || "";
-  const statusFilter =
-    (columnFilters.find((f) => f.id === "status")?.value as string) || "all";
-  const minAmtVal =
-    (columnFilters.find((f) => f.id === "amount")?.value as string) || "";
-
-  const updateFilter = (id: string, value: string) => {
-    const next = columnFilters.filter((f) => f.id !== id);
-    if (value && !(id === "status" && value === "all")) {
-      next.push({ id, value });
-    }
-    onColumnFiltersChange(next);
-  };
-
   return (
     <div className="flex flex-row items-center gap-4">
-      {/* 이메일 검색 */}
       <Input
         placeholder="Search Email..."
-        value={emailFilter}
-        onChange={(e) => updateFilter("email", e.target.value)}
+        value={filters.email}
+        onChange={(e) => onFiltersChange("email", e.target.value)}
         className="max-w-sm"
       />
 
-      {/* 상태 필터 */}
       <Select
-        value={statusFilter}
-        onValueChange={(val) => updateFilter("status", val)}
+        value={filters.status}
+        onValueChange={(val) => onFiltersChange("status", val)}
       >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Filter by Status" />
@@ -64,8 +48,8 @@ export default function Filters({
       <Input
         type="number"
         placeholder="Min Amount"
-        value={minAmtVal}
-        onChange={(e) => updateFilter("amount", e.target.value)}
+        value={filters.minAmount}
+        onChange={(e) => onFiltersChange("minAmount", e.target.value)}
         className="w-32"
       />
     </div>
