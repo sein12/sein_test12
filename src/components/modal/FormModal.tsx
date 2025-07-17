@@ -13,7 +13,6 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import CustomSelect from "./CustomSelect";
-import { submitForm } from "@/api/formApi";
 import SearchSosokModal from "./SearchSosokModal";
 
 export default function FormModal() {
@@ -37,19 +36,6 @@ export default function FormModal() {
       ...(key === "gubun" && { rank: "" }),
     }));
   };
-
-  /*
-  const handleSubmit = async () => {
-    try {
-      const data = await submitForm(formData);
-      console.log("서버 응답:", data);
-      alert("성공적으로 제출되었습니다!");
-    } catch (error) {
-      console.error("제출 실패:", error);
-      alert("제출 중 오류 발생");
-    }
-  };
-  */
 
   const handleSubmit = () => {
     console.log(JSON.stringify(formData, null, 2));
