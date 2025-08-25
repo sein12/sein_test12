@@ -1,11 +1,9 @@
-import Page from "./pages/Page";
-import Navbar from "./components/Navbar.tsx";
+import MainPage from './pages/MainPage'
 
 function App() {
   return (
     <div className="flex flex-col">
-      <Navbar />
-      <Page />
+      <MainPage/>
     </div>
   );
 }
